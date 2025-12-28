@@ -1,0 +1,38 @@
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged (lint + format)
+echo "📝 Running lint-staged..."
+npx lint-staged
+
+# Check if lint-staged passed
+if [ $? -ne 0 ]; then
+  echo "❌ Lint-staged failed. Please fix the issues and try again."
+  exit 1
+fi
+
+# Type check
+echo "🔍 Running TypeScript type check..."
+npm run type-check
+
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript type check failed. Please fix the type errors and try again."
+  exit 1
+fi
+
+# Build check (quick build to ensure no build errors)
+echo "🏗️ Running build check..."
+npm run build:api > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo "❌ API build failed. Please fix the build errors and try again."
+  exit 1
+fi
+
+npm run build:frontend > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+  echo "❌ Frontend build failed. Please fix the build errors and try again."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

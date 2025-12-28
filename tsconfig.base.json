@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Required for NestJS decorators
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // Aliases for shared libs
+    "baseUrl": ".",
+    "paths": {
+      "@api/database": ["apps/api/libs/database/dist"],
+      "@api/database/*": ["apps/api/libs/database/dist/*"],
+      "@api/shared": ["apps/api/libs/shared/dist"],
+      "@api/shared/*": ["apps/api/libs/shared/dist/*"],
+      "@fe/shared": ["apps/frontend/libs/shared/dist"],
+      "@fe/shared/*": ["apps/frontend/libs/shared/dist/*"],
+      "@fe/*": ["./apps/frontend/src/*"],
+      "@api/*": ["./apps/api/src/*"]
+    }
+  }
+}

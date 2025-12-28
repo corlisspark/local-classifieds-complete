@@ -1,0 +1,101 @@
+{
+  "title": "Local Classifieds",
+  "description": "Your local marketplace for buying and selling",
+  "language": "Language",
+  "portuguese_br": "Portuguese (BR)",
+  "portuguese_pt": "Portuguese (PT)",
+  "english": "English",
+  "welcome": "Welcome to Local Classifieds",
+  "get_started": "Get Started",
+  "learn_more": "Learn More",
+  "app": {
+    "name": "Local Classifieds",
+    "description": "Local classifieds and service marketplace platform"
+  },
+  "navigation": {
+    "home": "Home",
+    "categories": "Categories",
+    "listings": "Listings",
+    "about": "About",
+    "contact": "Contact",
+    "admin": "Admin",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "settings": "Settings"
+  },
+  "languages": {
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "submit": "Submit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info"
+  },
+  "forms": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "password": "Password must be at least 8 characters",
+    "confirmPassword": "Passwords do not match",
+    "phone": "Please enter a valid phone number",
+    "url": "Please enter a valid URL",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be no more than {{max}} characters",
+    "min": "Must be at least {{min}}",
+    "max": "Must be no more than {{max}}"
+  },
+  "messages": {
+    "success": {
+      "created": "{{item}} created successfully",
+      "updated": "{{item}} updated successfully",
+      "deleted": "{{item}} deleted successfully",
+      "saved": "Changes saved successfully"
+    },
+    "error": {
+      "generic": "Something went wrong. Please try again.",
+      "network": "Network error. Please check your connection.",
+      "unauthorized": "You are not authorized to perform this action",
+      "notFound": "{{item}} not found",
+      "validation": "Please check the form for errors"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete this {{item}}?",
+      "unsaved": "You have unsaved changes. Are you sure you want to leave?"
+    }
+  },
+  "pagination": {
+    "showing": "Showing {{start}} to {{end}} of {{total}} results",
+    "page": "Page {{current}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "first": "First",
+    "last": "Last"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived"
+  }
+}

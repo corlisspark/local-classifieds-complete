@@ -1,0 +1,76 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-api:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared libraries
+        run: npm run build --workspace=libs/shared --workspace=libs/database
+
+      - name: Generate Prisma client
+        run: npm run db:generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run database migrations
+        run: npm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Build API
+        run: npm run build:api
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      # Add deployment steps here based on your hosting platform
+      # Example for Vercel, Railway, or other platforms
+      - name: Deploy to production
+        run: echo "Deploy API to production platform"
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared libraries
+        run: npm run build --workspace=libs/shared
+
+      - name: Build Frontend
+        run: npm run build:frontend
+
+      # Add deployment steps here based on your hosting platform
+      # Example for Vercel, Netlify, or other platforms
+      - name: Deploy to production
+        run: echo "Deploy Frontend to production platform"

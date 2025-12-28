@@ -1,0 +1,87 @@
+{
+  "title": "Painel Administrativo",
+  "categories": {
+    "title": "Categorias",
+    "add": "Adicionar Categoria",
+    "edit": "Editar Categoria",
+    "delete": "Excluir Categoria",
+    "empty": "Nenhuma categoria encontrada",
+    "form": {
+      "name": "Nome da Categoria",
+      "slug": "Slug",
+      "description": "Descrição",
+      "parent": "Categoria Pai",
+      "displayOrder": "Ordem de Exibição",
+      "active": "Ativo",
+      "translations": "Traduções"
+    },
+    "table": {
+      "name": "Nome",
+      "slug": "Slug",
+      "parent": "Pai",
+      "children": "Filhos",
+      "status": "Status",
+      "actions": "Ações"
+    }
+  },
+  "users": {
+    "title": "Usuários",
+    "add": "Adicionar Usuário",
+    "edit": "Editar Usuário",
+    "delete": "Excluir Usuário",
+    "empty": "Nenhum usuário encontrado",
+    "form": {
+      "name": "Nome Completo",
+      "email": "Email",
+      "password": "Senha",
+      "role": "Função",
+      "active": "Ativo"
+    },
+    "table": {
+      "name": "Nome",
+      "email": "Email",
+      "role": "Função",
+      "status": "Status",
+      "lastLogin": "Último Login",
+      "actions": "Ações"
+    }
+  },
+  "listings": {
+    "title": "Anúncios",
+    "add": "Adicionar Anúncio",
+    "edit": "Editar Anúncio",
+    "delete": "Excluir Anúncio",
+    "empty": "Nenhum anúncio encontrado",
+    "form": {
+      "title": "Título",
+      "description": "Descrição",
+      "price": "Preço",
+      "category": "Categoria",
+      "status": "Status",
+      "featured": "Destaque",
+      "images": "Imagens"
+    },
+    "table": {
+      "title": "Título",
+      "category": "Categoria",
+      "price": "Preço",
+      "status": "Status",
+      "featured": "Destaque",
+      "created": "Criado",
+      "actions": "Ações"
+    }
+  },
+  "dashboard": {
+    "title": "Painel",
+    "stats": {
+      "totalCategories": "Total de Categorias",
+      "totalUsers": "Total de Usuários",
+      "totalListings": "Total de Anúncios",
+      "activeListings": "Anúncios Ativos"
+    },
+    "recent": {
+      "title": "Atividade Recente",
+      "noActivity": "Nenhuma atividade recente"
+    }
+  }
+}

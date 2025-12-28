@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+
+/* Tokens do Design System */
+@theme {
+  /* Brand */
+  --color-brand-primary: #2563eb;
+  --color-brand-primary-dark: #1e40af;
+  --color-brand-secondary: #f59e0b;
+  --color-brand-secondary-dark: #b45309;
+  --color-brand-accent: #0d9488;
+
+  /* Neutral */
+  --color-neutral-bg-light: #f9fafb;
+  --color-neutral-bg-card: #ffffff;
+  --color-neutral-border: #e5e7eb;
+  --color-neutral-text-primary: #111827;
+  --color-neutral-text-secondary: #6b7280;
+
+  /* Status */
+  --color-status-success: #10b981;
+  --color-status-warning: #fbbf24;
+  --color-status-error: #ef4444;
+  --color-status-info: #3b82f6;
+
+  /* Dark */
+  --color-dark-bg: #111827;
+  --color-dark-bg-card: #1f2937;
+  --color-dark-text-primary: #f9fafb;
+  --color-dark-text-secondary: #9ca3af;
+
+  /* Typography */
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+
+  /* Border radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Spacing */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+}

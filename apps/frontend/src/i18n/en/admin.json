@@ -1,0 +1,87 @@
+{
+  "title": "Admin Dashboard",
+  "categories": {
+    "title": "Categories",
+    "add": "Add Category",
+    "edit": "Edit Category",
+    "delete": "Delete Category",
+    "empty": "No categories found",
+    "form": {
+      "name": "Category Name",
+      "slug": "Slug",
+      "description": "Description",
+      "parent": "Parent Category",
+      "displayOrder": "Display Order",
+      "active": "Active",
+      "translations": "Translations"
+    },
+    "table": {
+      "name": "Name",
+      "slug": "Slug",
+      "parent": "Parent",
+      "children": "Children",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+  "users": {
+    "title": "Users",
+    "add": "Add User",
+    "edit": "Edit User",
+    "delete": "Delete User",
+    "empty": "No users found",
+    "form": {
+      "name": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "role": "Role",
+      "active": "Active"
+    },
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "lastLogin": "Last Login",
+      "actions": "Actions"
+    }
+  },
+  "listings": {
+    "title": "Listings",
+    "add": "Add Listing",
+    "edit": "Edit Listing",
+    "delete": "Delete Listing",
+    "empty": "No listings found",
+    "form": {
+      "title": "Title",
+      "description": "Description",
+      "price": "Price",
+      "category": "Category",
+      "status": "Status",
+      "featured": "Featured",
+      "images": "Images"
+    },
+    "table": {
+      "title": "Title",
+      "category": "Category",
+      "price": "Price",
+      "status": "Status",
+      "featured": "Featured",
+      "created": "Created",
+      "actions": "Actions"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "totalCategories": "Total Categories",
+      "totalUsers": "Total Users",
+      "totalListings": "Total Listings",
+      "activeListings": "Active Listings"
+    },
+    "recent": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity"
+    }
+  }
+}

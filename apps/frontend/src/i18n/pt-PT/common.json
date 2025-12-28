@@ -1,0 +1,101 @@
+{
+  "title": "Classificados Locais",
+  "description": "A sua plataforma local para comprar e vender",
+  "language": "Idioma",
+  "portuguese_br": "Português (BR)",
+  "portuguese_pt": "Português (PT)",
+  "english": "English",
+  "welcome": "Bem-vindo ao Classificados Locais",
+  "get_started": "Começar",
+  "learn_more": "Saber Mais",
+  "app": {
+    "name": "Classificados Locais",
+    "description": "Plataforma de classificados locais e marketplace de serviços"
+  },
+  "navigation": {
+    "home": "Início",
+    "categories": "Categorias",
+    "listings": "Anúncios",
+    "about": "Sobre",
+    "contact": "Contacto",
+    "admin": "Admin",
+    "dashboard": "Painel",
+    "users": "Utilizadores",
+    "settings": "Configurações"
+  },
+  "languages": {
+    "english": "English",
+    "portuguese": "Português",
+    "spanish": "Español"
+  },
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Criar",
+    "update": "Actualizar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "clear": "Limpar",
+    "submit": "Submeter",
+    "close": "Fechar",
+    "back": "Voltar",
+    "next": "Seguinte",
+    "previous": "Anterior",
+    "loading": "A carregar...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação"
+  },
+  "forms": {
+    "required": "Este campo é obrigatório",
+    "email": "Por favor, insira um email válido",
+    "password": "A palavra-passe deve ter pelo menos 8 caracteres",
+    "confirmPassword": "As palavras-passe não coincidem",
+    "phone": "Por favor, insira um telefone válido",
+    "url": "Por favor, insira uma URL válida",
+    "minLength": "Deve ter pelo menos {{min}} caracteres",
+    "maxLength": "Deve ter no máximo {{max}} caracteres",
+    "min": "Deve ser pelo menos {{min}}",
+    "max": "Deve ser no máximo {{max}}"
+  },
+  "messages": {
+    "success": {
+      "created": "{{item}} criado com sucesso",
+      "updated": "{{item}} actualizado com sucesso",
+      "deleted": "{{item}} eliminado com sucesso",
+      "saved": "Alterações guardadas com sucesso"
+    },
+    "error": {
+      "generic": "Algo correu mal. Tente novamente.",
+      "network": "Erro de rede. Verifique a sua ligação.",
+      "unauthorized": "Não está autorizado a realizar esta acção",
+      "notFound": "{{item}} não encontrado",
+      "validation": "Verifique o formulário para erros"
+    },
+    "confirm": {
+      "delete": "Tem a certeza que deseja eliminar este {{item}}?",
+      "unsaved": "Tem alterações não guardadas. Tem a certeza que deseja sair?"
+    }
+  },
+  "pagination": {
+    "showing": "A mostrar {{start}} a {{end}} de {{total}} resultados",
+    "page": "Página {{current}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Seguinte",
+    "first": "Primeiro",
+    "last": "Último"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendente",
+    "approved": "Aprovado",
+    "rejected": "Rejeitado",
+    "draft": "Rascunho",
+    "published": "Publicado",
+    "archived": "Arquivado"
+  }
+}

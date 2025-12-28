@@ -1,0 +1,13 @@
+echo "🔍 Validating commit message..."
+
+npx --no -- commitlint --edit "$1"
+
+if [ $? -ne 0 ]; then
+  echo "❌ Commit message validation failed!"
+  echo "📝 Use: type(scope): description"
+  echo "📋 Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+  echo "💡 Example: feat(auth): add user login functionality"
+  exit 1
+fi
+
+echo "✅ Commit message is valid!"

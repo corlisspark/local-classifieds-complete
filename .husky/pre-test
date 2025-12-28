@@ -1,0 +1,22 @@
+echo "🔍 Checking database connection..."
+
+# Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+  echo "❌ Docker is not running. Please start Docker and try again."
+  exit 1
+fi
+
+# Check if database container is running
+if ! docker-compose ps db | grep -q "Up"; then
+  echo "⚠️  Database container is not running. Starting it..."
+  npm run docker:up
+  sleep 5
+fi
+
+# Check database connection
+if ! docker-compose exec -T db pg_isready -U local_user -d local_db > /dev/null 2>&1; then
+  echo "❌ Database is not ready. Please check the database connection."
+  exit 1
+fi
+
+echo "✅ Database is ready for tests."

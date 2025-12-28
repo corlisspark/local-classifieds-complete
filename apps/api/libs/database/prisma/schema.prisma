@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Add your models here
+
+// =====================
+// User
+// =====================
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  name         String     @db.VarChar(120)
+  email        String     @unique @db.VarChar(140)
+  passwordHash String
+  role         UserRole   @default(CLIENT)
+  document     String?    @unique @db.VarChar(20) // CPF/CNPJ (opcional)
+  createdAt    DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+
+  provider     Provider?
+  client       Client?
+
+  @@map("users")
+}
+
+enum UserRole {
+  CLIENT
+  PROVIDER
+  ADMIN
+}
+
+// =====================
+// Provider
+// =====================
+model Provider {
+  id        String     @id @default(uuid()) @db.Uuid
+  userId    String     @unique @db.Uuid
+  bio       String?    @db.Text
+  phone     String?    @db.VarChar(30)
+  whatsapp  String?    @db.VarChar(30)
+  address   String?    @db.VarChar(255)
+  rating    Float?     @default(0)
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services  Service[]
+  categories Category[] @relation("ProviderCategories")
+  favorites ClientFavorite[]
+
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime   @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("providers")
+}
+
+// =====================
+// Client
+// =====================
+model Client {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @db.Uuid
+  address   String?  @db.VarChar(255)
+  phone     String?  @db.VarChar(30) // opcional
+  favorites ClientFavorite[]
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("clients")
+}
+
+// =====================
+// Client Favorite
+// =====================
+model ClientFavorite {
+  clientId   String   @db.Uuid
+  providerId String   @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  client     Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@id([clientId, providerId]) // unique composto
+  @@map("client_favorites")
+}
+
+// =====================
+// Service
+// =====================
+model Service {
+  id          String   @id @default(uuid()) @db.Uuid
+  providerId  String   @db.Uuid
+  categoryId  String   @db.Uuid
+  title       String   @db.VarChar(140)
+  description String?  @db.Text
+  price       Decimal? @db.Decimal(10, 2) // CORRETO
+  status      ServiceStatus @default(ACTIVE)
+
+  provider    Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@map("services")
+}
+
+enum ServiceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// =====================
+// Category
+// =====================
+model Category {
+  id            String                  @id @default(uuid()) @db.Uuid
+  slug          String                  @unique @db.VarChar(140)
+  parentId      String?                 @db.Uuid
+  parent        Category?               @relation("CategoryHierarchy", fields: [parentId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  children      Category[]              @relation("CategoryHierarchy")
+  active        Boolean                 @default(true)
+  displayOrder  Int                     @default(0)
+  createdAt     DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime                @default(now()) @updatedAt @db.Timestamptz(6)
+
+  translations  CategoryTranslation[]
+  providers     Provider[]              @relation("ProviderCategories")
+  services      Service[]
+
+  // Índices para performance
+  @@index([parentId, active]) // Para listagem de categorias ativas por grupo
+  @@index([active, displayOrder]) // Para ordenação de categorias ativas
+  @@index([slug]) // Já existe como unique, mas explícito para clareza
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  id          String   @id @default(uuid()) @db.Uuid
+  categoryId  String   @db.Uuid
+  language    String   @db.VarChar(5) // e.g., "en", "pt", "es", "pt-BR"
+  name        String   @db.VarChar(120)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, language])
+  @@map("category_translations")
+}

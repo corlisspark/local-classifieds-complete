@@ -1,0 +1,48 @@
+echo "🚀 Running pre-push checks..."
+
+# Full lint check
+echo "🔍 Running full lint check..."
+npm run lint
+
+if [ $? -ne 0 ]; then
+  echo "❌ Lint check failed. Please fix the linting errors and try again."
+  exit 1
+fi
+
+# Format check
+echo "🎨 Checking code formatting..."
+npm run format:check
+
+if [ $? -ne 0 ]; then
+  echo "❌ Code formatting check failed. Please run 'npm run format' and try again."
+  exit 1
+fi
+
+# Type check
+echo "🔍 Running TypeScript type check..."
+npm run type-check
+
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript type check failed. Please fix the type errors and try again."
+  exit 1
+fi
+
+# Run all tests
+echo "🧪 Running all tests..."
+npm run test
+
+if [ $? -ne 0 ]; then
+  echo "❌ Tests failed. Please fix the failing tests and try again."
+  exit 1
+fi
+
+# Build all applications
+echo "🏗️ Building all applications..."
+npm run build
+
+if [ $? -ne 0 ]; then
+  echo "❌ Build failed. Please fix the build errors and try again."
+  exit 1
+fi
+
+echo "✅ All pre-push checks passed! Ready to push."

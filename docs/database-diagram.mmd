@@ -1,0 +1,81 @@
+erDiagram
+    User {
+        string id PK "UUID"
+        string name "VARCHAR(120)"
+        string email UK "VARCHAR(140)"
+        string passwordHash "VARCHAR(255)"
+        enum role "CLIENT|PROVIDER|ADMIN"
+        string document UK "VARCHAR(20)"
+        datetime createdAt "TIMESTAMPTZ"
+        datetime updatedAt "TIMESTAMPTZ"
+    }
+    
+    Provider {
+        string id PK "UUID"
+        string userId FK "UUID"
+        string bio "TEXT"
+        string phone "VARCHAR(30)"
+        string whatsapp "VARCHAR(30)"
+        string address "VARCHAR(255)"
+        float rating "DEFAULT 0"
+        datetime createdAt "TIMESTAMPTZ"
+        datetime updatedAt "TIMESTAMPTZ"
+    }
+    
+    Client {
+        string id PK "UUID"
+        string userId FK "UUID"
+        string address "VARCHAR(255)"
+        string phone "VARCHAR(30)"
+        datetime createdAt "TIMESTAMPTZ"
+        datetime updatedAt "TIMESTAMPTZ"
+    }
+    
+    Service {
+        string id PK "UUID"
+        string providerId FK "UUID"
+        string categoryId FK "UUID"
+        string title "VARCHAR(140)"
+        string description "TEXT"
+        decimal price "DECIMAL(10,2)"
+        enum status "ACTIVE|INACTIVE"
+        datetime createdAt "TIMESTAMPTZ"
+        datetime updatedAt "TIMESTAMPTZ"
+    }
+    
+    Category {
+        string id PK "UUID"
+        string slug UK "VARCHAR(140)"
+        string parentId FK "UUID"
+        boolean active "DEFAULT true"
+        int displayOrder "DEFAULT 0"
+        datetime createdAt "TIMESTAMPTZ"
+        datetime updatedAt "TIMESTAMPTZ"
+    }
+    
+    CategoryTranslation {
+        string id PK "UUID"
+        string categoryId FK "UUID"
+        string language "VARCHAR(5)"
+        string name "VARCHAR(120)"
+        string description "TEXT"
+        datetime createdAt "TIMESTAMPTZ"
+        datetime updatedAt "TIMESTAMPTZ"
+    }
+    
+    ClientFavorite {
+        string clientId PK,FK "UUID"
+        string providerId PK,FK "UUID"
+        datetime createdAt "TIMESTAMPTZ"
+    }
+    
+    %% Relationships
+    User ||--o| Provider : "has profile"
+    User ||--o| Client : "has profile"
+    Provider ||--o{ Service : "offers"
+    Category ||--o{ Service : "categorizes"
+    Category ||--o{ Category : "parent/child"
+    Category ||--o{ CategoryTranslation : "translated"
+    Client ||--o{ ClientFavorite : "favorites"
+    Provider ||--o{ ClientFavorite : "favorited by"
+    Provider }o--o{ Category : "specializes in"

@@ -1,0 +1,103 @@
+{
+  "dashboard": {
+    "title": "Painel Administrativo",
+    "description": "Gerencie categorias e configurações do sistema",
+    "categories": "Categorias",
+    "users": "Usuários",
+    "listings": "Anúncios",
+    "settings": "Configurações"
+  },
+  "categories": {
+    "title": "Categorias",
+    "add": "Adicionar Categoria",
+    "edit": "Editar Categoria",
+    "delete": "Excluir Categoria",
+    "name": "Nome",
+    "slug": "Slug",
+    "description": "Descrição",
+    "parent": "Categoria Pai",
+    "status": "Status",
+    "active": "Ativa",
+    "inactive": "Inativa",
+    "order": "Ordem",
+    "created": "Criado em",
+    "actions": "Ações",
+    "search": "Buscar por nome ou slug...",
+    "showInactive": "Mostrar inativas",
+    "clear": "Limpar",
+    "showing": "Mostrando {{count}} de {{total}} categorias",
+    "filtered": "(filtrado por \"{{term}}\")",
+    "noResults": "Nenhuma categoria encontrada",
+    "loading": "Carregando categorias...",
+    "error": "Erro ao carregar categorias",
+    "retry": "Tentar novamente",
+    "page": "Página {{current}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "showingResults": "Mostrando {{count}} de {{total}} categorias"
+  },
+  "forms": {
+    "slug": "Slug",
+    "slugPlaceholder": "categoria-exemplo",
+    "displayOrder": "Ordem de Exibição",
+    "parentCategory": "Categoria Pai",
+    "parentPlaceholder": "Buscar categoria pai...",
+    "parentEmpty": "Nenhuma categoria encontrada",
+    "parentRoot": "Nenhuma (Categoria Principal)",
+    "parentRootDesc": "Criar como categoria raiz",
+    "active": "Categoria ativa",
+    "translations": "Traduções",
+    "name": "Nome",
+    "namePlaceholder": "Nome em {{language}}",
+    "description": "Descrição",
+    "descriptionPlaceholder": "Descrição em {{language}}",
+    "create": "Criar Categoria",
+    "creating": "Criando...",
+    "save": "Salvar Alterações",
+    "saving": "Salvando...",
+    "cancel": "Cancelar",
+    "required": "Este campo é obrigatório",
+    "slugExists": "Este slug já existe. Escolha outro.",
+    "nameRequired": "Pelo menos uma tradução com nome é obrigatória"
+  },
+  "modals": {
+    "addCategory": "Adicionar Nova Categoria",
+    "editCategory": "Editar Categoria",
+    "deleteCategory": "Confirmar Exclusão",
+    "deleteMessage": "Tem certeza que deseja excluir a categoria {{name}}?",
+    "deleteWarning": "Esta ação não pode ser desfeita. Todos os dados relacionados a esta categoria serão perdidos.",
+    "deleteConfirm": "Excluir",
+    "deleting": "Excluindo..."
+  },
+  "stats": {
+    "title": "Estatísticas",
+    "total": "Total",
+    "active": "Ativas",
+    "inactive": "Inativas",
+    "withChildren": "Com Filhos"
+  },
+  "actions": {
+    "edit": "Editar",
+    "deactivate": "Desativar",
+    "restore": "Restaurar",
+    "delete": "Excluir",
+    "refresh": "Atualizar"
+  },
+  "messages": {
+    "success": {
+      "created": "Categoria criada com sucesso!",
+      "updated": "Categoria atualizada com sucesso!",
+      "deleted": "Categoria \"{{name}}\" excluída com sucesso!",
+      "deactivated": "Categoria \"{{name}}\" desativada com sucesso!",
+      "restored": "Categoria \"{{name}}\" restaurada com sucesso!"
+    },
+    "error": {
+      "create": "Erro ao criar categoria",
+      "update": "Erro ao atualizar categoria",
+      "delete": "Erro ao excluir categoria",
+      "deactivate": "Erro ao alterar status da categoria",
+      "restore": "Erro ao restaurar categoria",
+      "validation": "Erro de Validação"
+    }
+  }
+}
