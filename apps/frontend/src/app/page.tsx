@@ -153,7 +153,10 @@ export default function Home() {
               <Button
                 variant='primary'
                 size='sm'
-                onClick={() => setShowSignup(true)}
+                onClick={() => {
+                  console.log('Signup button clicked');
+                  setShowSignup(true);
+                }}
               >
                 Cadastrar-se
               </Button>
@@ -310,7 +313,10 @@ export default function Home() {
             variant='secondary'
             size='lg'
             className='px-8'
-            onClick={() => setShowSignup(true)}
+            onClick={() => {
+              console.log('Provider signup button clicked');
+              setShowSignup(true);
+            }}
           >
             Cadastre-se Agora
           </Button>
