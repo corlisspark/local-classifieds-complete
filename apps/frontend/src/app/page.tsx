@@ -2,8 +2,10 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 // import { useTranslations } from './providers/I18nProvider'; // TODO: Implement translations
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { apiClient } from '../services/api';
 import {
   Button,
   Card,
@@ -18,6 +20,27 @@ import {
 
 export default function Home() {
   // const { t } = useTranslations('common'); // TODO: Implement translations
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupData, setSignupData] = useState({ name: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+    
+    try {
+      await apiClient.post('/auth/register', signupData);
+      setMessage('Cadastro realizado com sucesso!');
+      setSignupData({ name: '', email: '', password: '' });
+      setTimeout(() => setShowSignup(false), 2000);
+    } catch (error: any) {
+      setMessage(error.message || 'Erro no cadastro');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Mock data for categories
   const categories = [
@@ -122,7 +145,11 @@ export default function Home() {
               <Button variant='outline' size='sm'>
                 Entrar
               </Button>
-              <Button variant='primary' size='sm'>
+              <Button 
+                variant='primary' 
+                size='sm'
+                onClick={() => setShowSignup(true)}
+              >
                 Cadastrar-se
               </Button>
             </div>
@@ -274,11 +301,14 @@ export default function Home() {
             Cadastre-se gratuitamente e comece a receber clientes hoje mesmo.
             Aumente sua visibilidade e cresça seu negócio.
           </Body>
-          <Link href='/cadastro-prestador'>
-            <Button variant='secondary' size='lg' className='px-8'>
-              Cadastre-se Agora
-            </Button>
-          </Link>
+          <Button 
+            variant='secondary' 
+            size='lg' 
+            className='px-8'
+            onClick={() => setShowSignup(true)}
+          >
+            Cadastre-se Agora
+          </Button>
         </div>
       </section>
 
@@ -390,6 +420,62 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Simple Signup Modal */}
+      {showSignup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold mb-4">Cadastrar-se</h2>
+            <form onSubmit={handleSignup} className="space-y-4">
+              <input
+                type="text"
+                placeholder="Nome completo"
+                value={signupData.name}
+                onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={signupData.email}
+                onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+                required
+              />
+              <input
+                type="password"
+                placeholder="Senha (mín. 6 caracteres)"
+                value={signupData.password}
+                onChange={(e) => setSignupData({...signupData, password: e.target.value})}
+                className="w-full p-3 border rounded-lg"
+                required
+              />
+              {message && (
+                <p className={message.includes('sucesso') ? 'text-green-600' : 'text-red-600'}>
+                  {message}
+                </p>
+              )}
+              <div className="flex gap-3">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {loading ? 'Cadastrando...' : 'Cadastrar'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowSignup(false)}
+                  className="px-6 py-3 border rounded-lg hover:bg-gray-50"
+                >
+                  Fechar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
