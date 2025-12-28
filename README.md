@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🏠 Local Classifieds
 
 > Plataforma de classificados locais construída com arquitetura moderna e escalável
@@ -414,3 +415,6 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
     <a href="#-local-classifieds">⬆️ Voltar ao topo</a>
   </p>
 </div>
+=======
+# local-classifieds-complete
+>>>>>>> e5ecd05e44f710252d0695fc16df7f3966df8c8d
