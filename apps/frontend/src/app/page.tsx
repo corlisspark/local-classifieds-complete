@@ -40,7 +40,8 @@ export default function Home() {
       setSignupData({ name: '', email: '', password: '' });
       setTimeout(() => setShowSignup(false), 2000);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro no cadastro';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Erro no cadastro';
       setMessage(errorMessage);
     } finally {
       setLoading(false);
@@ -154,6 +155,7 @@ export default function Home() {
                 variant='primary'
                 size='sm'
                 onClick={() => {
+                  // eslint-disable-next-line no-console
                   console.log('Signup button clicked');
                   setShowSignup(true);
                 }}
@@ -314,6 +316,7 @@ export default function Home() {
             size='lg'
             className='px-8'
             onClick={() => {
+              // eslint-disable-next-line no-console
               console.log('Provider signup button clicked');
               setShowSignup(true);
             }}
