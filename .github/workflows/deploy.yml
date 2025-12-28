@@ -31,7 +31,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run database migrations
-        run: npm run db:migrate
+        run: npm run db:deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
@@ -40,11 +40,13 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      # Add deployment steps here based on your hosting platform
-      # Example for Vercel, Railway, or other platforms
-      - name: Deploy to production
-        run: echo "Deploy API to production platform"
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy API to Railway
+        run: railway up --service api
         env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   deploy-frontend:
@@ -70,7 +72,10 @@ jobs:
       - name: Build Frontend
         run: npm run build:frontend
 
-      # Add deployment steps here based on your hosting platform
-      # Example for Vercel, Netlify, or other platforms
-      - name: Deploy to production
-        run: echo "Deploy Frontend to production platform"
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy Frontend to Railway
+        run: railway up --service frontend
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
