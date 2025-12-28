@@ -20,9 +20,11 @@ export default function LoginPage() {
       const response = await apiClient.post('/auth/login', formData);
       setMessage('Login successful!');
       // Store token if needed (but no localStorage as requested)
+      // eslint-disable-next-line no-console
       console.log('Login response:', response);
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Login failed';
       setMessage(errorMessage);
     } finally {
       setIsLoading(false);
@@ -42,7 +44,7 @@ export default function LoginPage() {
         </div>
         <form
           className='mt-8 space-y-6'
-          onSubmit={(e) => {
+          onSubmit={e => {
             void handleSubmit(e);
           }}
         >
@@ -53,7 +55,7 @@ export default function LoginPage() {
                 required
                 placeholder='Email'
                 value={formData.email}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, email: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-t-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -65,7 +67,7 @@ export default function LoginPage() {
                 required
                 placeholder='Senha'
                 value={formData.password}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, password: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-b-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -76,7 +78,9 @@ export default function LoginPage() {
           {message && (
             <div
               className={`text-center text-sm ${
-                message.includes('successful') ? 'text-green-600' : 'text-red-600'
+                message.includes('successful')
+                  ? 'text-green-600'
+                  : 'text-red-600'
               }`}
             >
               {message}
@@ -94,10 +98,7 @@ export default function LoginPage() {
           </div>
 
           <div className='text-center'>
-            <a
-              href='/register'
-              className='text-indigo-600 hover:text-indigo-500'
-            >
+            <a href='/register' className='text-indigo-600 hover:text-indigo-500'>
               Não tem conta? Cadastre-se
             </a>
           </div>

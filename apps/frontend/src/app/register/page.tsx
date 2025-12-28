@@ -22,7 +22,8 @@ export default function RegisterPage() {
       setMessage('Registration successful! You can now login.');
       setFormData({ name: '', email: '', password: '' });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Registration failed';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Registration failed';
       setMessage(errorMessage);
     } finally {
       setIsLoading(false);
@@ -42,7 +43,7 @@ export default function RegisterPage() {
         </div>
         <form
           className='mt-8 space-y-6'
-          onSubmit={(e) => {
+          onSubmit={e => {
             void handleSubmit(e);
           }}
         >
@@ -53,7 +54,7 @@ export default function RegisterPage() {
                 required
                 placeholder='Nome completo'
                 value={formData.name}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-t-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -65,7 +66,7 @@ export default function RegisterPage() {
                 required
                 placeholder='Email'
                 value={formData.email}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, email: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -77,7 +78,7 @@ export default function RegisterPage() {
                 required
                 placeholder='Senha (mín. 6 caracteres)'
                 value={formData.password}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, password: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-b-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -88,7 +89,9 @@ export default function RegisterPage() {
           {message && (
             <div
               className={`text-center text-sm ${
-                message.includes('successful') ? 'text-green-600' : 'text-red-600'
+                message.includes('successful')
+                  ? 'text-green-600'
+                  : 'text-red-600'
               }`}
             >
               {message}
@@ -106,10 +109,7 @@ export default function RegisterPage() {
           </div>
 
           <div className='text-center'>
-            <a
-              href='/login'
-              className='text-indigo-600 hover:text-indigo-500'
-            >
+            <a href='/login' className='text-indigo-600 hover:text-indigo-500'>
               Já tem conta? Faça login
             </a>
           </div>

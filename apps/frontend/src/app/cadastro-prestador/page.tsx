@@ -32,7 +32,8 @@ export default function ProviderRegisterPage() {
       );
       setFormData({ name: '', email: '', password: '', phone: '', bio: '' });
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Erro no cadastro';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Erro no cadastro';
       setMessage(errorMessage);
     } finally {
       setIsLoading(false);
@@ -52,7 +53,7 @@ export default function ProviderRegisterPage() {
         </div>
         <form
           className='mt-8 space-y-6'
-          onSubmit={(e) => {
+          onSubmit={e => {
             void handleSubmit(e);
           }}
         >
@@ -63,7 +64,7 @@ export default function ProviderRegisterPage() {
                 required
                 placeholder='Nome completo'
                 value={formData.name}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -75,7 +76,7 @@ export default function ProviderRegisterPage() {
                 required
                 placeholder='Email'
                 value={formData.email}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, email: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -87,7 +88,7 @@ export default function ProviderRegisterPage() {
                 required
                 placeholder='Senha (mín. 6 caracteres)'
                 value={formData.password}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, password: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -98,7 +99,7 @@ export default function ProviderRegisterPage() {
                 type='tel'
                 placeholder='Telefone/WhatsApp (opcional)'
                 value={formData.phone}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, phone: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
@@ -109,7 +110,7 @@ export default function ProviderRegisterPage() {
                 rows={3}
                 placeholder='Conte sobre você e seus serviços (opcional)'
                 value={formData.bio}
-                onChange={(e) =>
+                onChange={e =>
                   setFormData({ ...formData, bio: e.target.value })
                 }
                 className='relative block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
