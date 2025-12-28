@@ -21,7 +21,11 @@ import {
 export default function Home() {
   // const { t } = useTranslations('common'); // TODO: Implement translations
   const [showSignup, setShowSignup] = useState(false);
-  const [signupData, setSignupData] = useState({ name: '', email: '', password: '' });
+  const [signupData, setSignupData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -29,14 +33,15 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-    
+
     try {
       await apiClient.post('/auth/register', signupData);
       setMessage('Cadastro realizado com sucesso!');
       setSignupData({ name: '', email: '', password: '' });
       setTimeout(() => setShowSignup(false), 2000);
-    } catch (error: any) {
-      setMessage(error.message || 'Erro no cadastro');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro no cadastro';
+      setMessage(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -145,8 +150,8 @@ export default function Home() {
               <Button variant='outline' size='sm'>
                 Entrar
               </Button>
-              <Button 
-                variant='primary' 
+              <Button
+                variant='primary'
                 size='sm'
                 onClick={() => setShowSignup(true)}
               >
@@ -301,9 +306,9 @@ export default function Home() {
             Cadastre-se gratuitamente e comece a receber clientes hoje mesmo.
             Aumente sua visibilidade e cresça seu negócio.
           </Body>
-          <Button 
-            variant='secondary' 
-            size='lg' 
+          <Button
+            variant='secondary'
+            size='lg'
             className='px-8'
             onClick={() => setShowSignup(true)}
           >
@@ -423,51 +428,68 @@ export default function Home() {
 
       {/* Simple Signup Modal */}
       {showSignup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">Cadastrar-se</h2>
-            <form onSubmit={handleSignup} className="space-y-4">
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <div className='bg-white p-8 rounded-lg max-w-md w-full mx-4'>
+            <h2 className='text-2xl font-bold mb-4'>Cadastrar-se</h2>
+            <form
+              onSubmit={e => {
+                void handleSignup(e);
+              }}
+              className='space-y-4'
+            >
               <input
-                type="text"
-                placeholder="Nome completo"
+                type='text'
+                placeholder='Nome completo'
                 value={signupData.name}
-                onChange={(e) => setSignupData({...signupData, name: e.target.value})}
-                className="w-full p-3 border rounded-lg"
+                onChange={e =>
+                  setSignupData({ ...signupData, name: e.target.value })
+                }
+                className='w-full p-3 border rounded-lg'
                 required
               />
               <input
-                type="email"
-                placeholder="Email"
+                type='email'
+                placeholder='Email'
                 value={signupData.email}
-                onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                className="w-full p-3 border rounded-lg"
+                onChange={e =>
+                  setSignupData({ ...signupData, email: e.target.value })
+                }
+                className='w-full p-3 border rounded-lg'
                 required
               />
               <input
-                type="password"
-                placeholder="Senha (mín. 6 caracteres)"
+                type='password'
+                placeholder='Senha (mín. 6 caracteres)'
                 value={signupData.password}
-                onChange={(e) => setSignupData({...signupData, password: e.target.value})}
-                className="w-full p-3 border rounded-lg"
+                onChange={e =>
+                  setSignupData({ ...signupData, password: e.target.value })
+                }
+                className='w-full p-3 border rounded-lg'
                 required
               />
               {message && (
-                <p className={message.includes('sucesso') ? 'text-green-600' : 'text-red-600'}>
+                <p
+                  className={
+                    message.includes('sucesso')
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }
+                >
                   {message}
                 </p>
               )}
-              <div className="flex gap-3">
+              <div className='flex gap-3'>
                 <button
-                  type="submit"
+                  type='submit'
                   disabled={loading}
-                  className="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className='flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50'
                 >
                   {loading ? 'Cadastrando...' : 'Cadastrar'}
                 </button>
                 <button
-                  type="button"
+                  type='button'
                   onClick={() => setShowSignup(false)}
-                  className="px-6 py-3 border rounded-lg hover:bg-gray-50"
+                  className='px-6 py-3 border rounded-lg hover:bg-gray-50'
                 >
                   Fechar
                 </button>
