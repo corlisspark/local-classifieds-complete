@@ -47,3 +47,12 @@ export type {
   ListingQueryParams,
   ListingStats,
 } from './listings';
+
+export { servicesService, ServicesService } from './services';
+export type {
+  Service,
+  CreateServiceData,
+  UpdateServiceData,
+  ServiceQueryParams,
+  ServiceStats,
+} from './services';

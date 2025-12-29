@@ -39,6 +39,14 @@ import {
   useRestoreCategory,
   type Category,
 } from '../../../services';
+import {
+  useServicesPaginated,
+  useServiceStats,
+  useCreateService,
+  useUpdateService,
+  useDeleteService,
+} from '../../../hooks/useServices';
+import { Service, CreateServiceData } from '../../../services/services';
 import { Spinner } from '../../../components/ui/Spinner';
 import { useToastNotifications } from '../../../components/ui/Toast';
 import type { AutocompleteOption } from '../../../components/ui/Autocomplete';
@@ -61,6 +69,11 @@ export default function AdminPage() {
     null
   );
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
+  // States for services
+  const [showAddServiceModal, setShowAddServiceModal] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null);
+  const [serviceSearchTerm, setServiceSearchTerm] = useState('');
+  const [showInactiveServices, setShowInactiveServices] = useState(false);
 
   // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -97,6 +110,19 @@ export default function AdminPage() {
 
   const { data: stats } = useCategoryStats();
 
+  // Services data fetching
+  const {
+    data: servicesPaginatedData,
+    isLoading: servicesLoading,
+    error: servicesError,
+    refetch: refetchServices,
+  } = useServicesPaginated(page, limit, {
+    includeProvider: true,
+    includeCategory: true,
+  });
+
+  const { data: servicesStats } = useServiceStats();
+
   // Hook para buscar todas as categorias (sem paginação) para o Autocomplete
   const { data: allCategories = [] } = useCategories({
     includeInactive: false, // Só categorias ativas para o Autocomplete
@@ -114,6 +140,11 @@ export default function AdminPage() {
 
   // Hook para restaurar categoria
   const restoreCategoryMutation = useRestoreCategory();
+
+  // Services mutations
+  const createServiceMutation = useCreateService();
+  const updateServiceMutation = useUpdateService();
+  const deleteServiceMutation = useDeleteService();
 
   // Hook para notificações
   const { showSuccess, showError } = useToastNotifications();
@@ -194,6 +225,16 @@ export default function AdminPage() {
       { language: 'pt', name: '', description: '' },
       { language: 'en', name: '', description: '' },
     ],
+  });
+
+  // Service form data
+  const [serviceFormData, setServiceFormData] = useState<CreateServiceData>({
+    providerId: '',
+    categoryId: '',
+    title: '',
+    description: '',
+    price: undefined,
+    status: 'ACTIVE',
   });
 
   const handleInputChange = (
@@ -430,6 +471,44 @@ export default function AdminPage() {
     setShowEditModal(true);
   };
 
+  const handleCreateService = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!serviceFormData.title.trim()) {
+      showError('Título é obrigatório', 'Validação');
+      return;
+    }
+
+    if (!serviceFormData.categoryId) {
+      showError('Categoria é obrigatória', 'Validação');
+      return;
+    }
+
+    if (!serviceFormData.providerId) {
+      showError('Provedor é obrigatório', 'Validação');
+      return;
+    }
+
+    try {
+      await createServiceMutation.mutateAsync(serviceFormData);
+      showSuccess('Serviço criado com sucesso!', 'Sucesso');
+      setServiceFormData({
+        providerId: '',
+        categoryId: '',
+        title: '',
+        description: '',
+        price: undefined,
+        status: 'ACTIVE',
+      });
+      setShowAddServiceModal(false);
+    } catch (error) {
+      showError(
+        error instanceof Error ? error.message : 'Erro ao criar serviço',
+        'Erro'
+      );
+    }
+  };
+
   // Sidebar menu items
   const sidebarItems = [
     {
@@ -453,6 +532,27 @@ export default function AdminPage() {
       onClick: () => setActiveSection(AdminSection.CATEGORIES),
       active: activeSection === AdminSection.CATEGORIES,
     },
+    {
+      id: 'listings',
+      label: 'Serviços',
+      icon: (
+        <svg
+          className='w-5 h-5'
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth={2}
+            d='M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01'
+          />
+        </svg>
+      ),
+      onClick: () => setActiveSection(AdminSection.LISTINGS),
+      active: activeSection === AdminSection.LISTINGS,
+    },
   ];
 
   return (
@@ -474,6 +574,14 @@ export default function AdminPage() {
             {activeSection === AdminSection.CATEGORIES && (
               <Button onClick={() => setShowAddModal(true)} variant='primary'>
                 Adicionar Categoria
+              </Button>
+            )}
+            {activeSection === AdminSection.LISTINGS && (
+              <Button
+                onClick={() => setShowAddServiceModal(true)}
+                variant='primary'
+              >
+                Adicionar Serviço
               </Button>
             )}
           </div>
@@ -810,6 +918,310 @@ export default function AdminPage() {
                         </Small>
                       </div>
                     </div>
+                  )}
+                </CardContent>
+              </Card>
+            </>
+          )}
+
+          {activeSection === AdminSection.LISTINGS && (
+            <>
+              {/* Services Statistics */}
+              {servicesStats && (
+                <Card className='mb-6'>
+                  <CardHeader>
+                    <H3>Estatísticas de Serviços</H3>
+                  </CardHeader>
+                  <CardContent>
+                    <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-blue-600'>
+                          {servicesStats.total}
+                        </div>
+                        <Small className='text-neutral-text-secondary'>
+                          Total
+                        </Small>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-green-600'>
+                          {servicesStats.active}
+                        </div>
+                        <Small className='text-neutral-text-secondary'>
+                          Ativos
+                        </Small>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-red-600'>
+                          {servicesStats.inactive}
+                        </div>
+                        <Small className='text-neutral-text-secondary'>
+                          Inativos
+                        </Small>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-purple-600'>
+                          {servicesStats.averagePrice > 0
+                            ? `R$ ${servicesStats.averagePrice.toFixed(2)}`
+                            : '-'}
+                        </div>
+                        <Small className='text-neutral-text-secondary'>
+                          Preço Médio
+                        </Small>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Services List */}
+              <Card>
+                <CardHeader>
+                  <div className='flex justify-between items-center'>
+                    <div>
+                      <H2>Serviços</H2>
+                      <Small className='text-neutral-text-secondary'>
+                        {servicesLoading
+                          ? 'Carregando...'
+                          : `${servicesPaginatedData?.data?.length || 0} de ${servicesPaginatedData?.pagination?.total || 0} serviços`}
+                      </Small>
+                    </div>
+                    <Button
+                      variant='outline'
+                      size='sm'
+                      onClick={() => void refetchServices()}
+                    >
+                      Atualizar
+                    </Button>
+                  </div>
+                </CardHeader>
+
+                {/* Services Filters */}
+                <div className='px-6 py-4 border-b border-neutral-200 bg-neutral-50'>
+                  <div className='flex items-center gap-4'>
+                    <div className='flex-1'>
+                      <Input
+                        placeholder='Buscar por título...'
+                        value={serviceSearchTerm}
+                        onChange={e => setServiceSearchTerm(e.target.value)}
+                      />
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      <input
+                        type='checkbox'
+                        id='showInactiveServices'
+                        checked={showInactiveServices}
+                        onChange={e =>
+                          setShowInactiveServices(e.target.checked)
+                        }
+                        className='rounded border-neutral-300'
+                      />
+                      <label
+                        htmlFor='showInactiveServices'
+                        className='text-sm text-neutral-700'
+                      >
+                        Mostrar inativos
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <CardContent>
+                  {servicesLoading ? (
+                    <div className='flex items-center justify-center py-8'>
+                      <Spinner size='lg' />
+                      <span className='ml-2'>Carregando serviços...</span>
+                    </div>
+                  ) : servicesError ? (
+                    <div className='text-center py-8'>
+                      <H3 className='text-red-600 mb-2'>
+                        Erro ao carregar serviços
+                      </H3>
+                      <Body className='text-neutral-text-secondary mb-4'>
+                        {servicesError.message}
+                      </Body>
+                      <Button onClick={() => void refetchServices()}>
+                        Tentar novamente
+                      </Button>
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Título</TableHead>
+                          <TableHead>Categoria</TableHead>
+                          <TableHead>Provedor</TableHead>
+                          <TableHead>Preço</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Criado em</TableHead>
+                          <TableHead>Ações</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {(servicesPaginatedData?.data || []).length === 0 ? (
+                          <TableEmpty
+                            colSpan={7}
+                            message='Nenhum serviço encontrado'
+                          />
+                        ) : (
+                          (servicesPaginatedData?.data || [])
+                            .filter((service: Service) => {
+                              if (serviceSearchTerm) {
+                                return service.title
+                                  .toLowerCase()
+                                  .includes(serviceSearchTerm.toLowerCase());
+                              }
+                              if (
+                                !showInactiveServices &&
+                                service.status === 'INACTIVE'
+                              ) {
+                                return false;
+                              }
+                              return true;
+                            })
+                            .map((service: Service) => (
+                              <TableRow key={service.id}>
+                                <TableCell>
+                                  <div>
+                                    <div className='font-medium'>
+                                      {service.title}
+                                    </div>
+                                    {service.description && (
+                                      <div className='text-sm text-neutral-500 truncate max-w-xs'>
+                                        {service.description}
+                                      </div>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <span className='text-sm text-neutral-600'>
+                                    {service.category?.translations?.[0]
+                                      ?.name ||
+                                      service.category?.slug ||
+                                      '-'}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <span className='text-sm text-neutral-600'>
+                                    {service.provider?.user?.name || '-'}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <span className='text-sm text-neutral-600'>
+                                    {service.price
+                                      ? `R$ ${Number(service.price).toFixed(2)}`
+                                      : '-'}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge
+                                    variant={
+                                      service.status === 'ACTIVE'
+                                        ? 'success'
+                                        : 'default'
+                                    }
+                                    size='sm'
+                                  >
+                                    {service.status === 'ACTIVE'
+                                      ? 'Ativo'
+                                      : 'Inativo'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <span className='text-sm text-neutral-600'>
+                                    {new Date(
+                                      service.createdAt
+                                    ).toLocaleDateString('pt-BR')}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <Dropdown
+                                    trigger={<MenuButton>⋮</MenuButton>}
+                                    items={[
+                                      createDropdownItems.edit(() => {
+                                        // TODO: Implement edit service functionality
+                                        showSuccess(
+                                          'Edit functionality coming soon!'
+                                        );
+                                      }),
+                                      {
+                                        id: 'toggle-status',
+                                        label:
+                                          service.status === 'ACTIVE'
+                                            ? 'Desativar'
+                                            : 'Ativar',
+                                        icon:
+                                          service.status === 'ACTIVE' ? (
+                                            <svg
+                                              className='w-4 h-4'
+                                              fill='none'
+                                              stroke='currentColor'
+                                              viewBox='0 0 24 24'
+                                            >
+                                              <path
+                                                strokeLinecap='round'
+                                                strokeLinejoin='round'
+                                                strokeWidth={2}
+                                                d='M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z'
+                                              />
+                                            </svg>
+                                          ) : (
+                                            <svg
+                                              className='w-4 h-4'
+                                              fill='none'
+                                              stroke='currentColor'
+                                              viewBox='0 0 24 24'
+                                            >
+                                              <path
+                                                strokeLinecap='round'
+                                                strokeLinejoin='round'
+                                                strokeWidth={2}
+                                                d='M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15'
+                                              />
+                                            </svg>
+                                          ),
+                                        onClick: () => {
+                                          void (async () => {
+                                            try {
+                                              await updateServiceMutation.mutateAsync(
+                                                {
+                                                  id: service.id,
+                                                  data: {
+                                                    status:
+                                                      service.status ===
+                                                      'ACTIVE'
+                                                        ? 'INACTIVE'
+                                                        : 'ACTIVE',
+                                                  },
+                                                }
+                                              );
+                                              showSuccess(
+                                                `Serviço "${service.title}" ${service.status === 'ACTIVE' ? 'desativado' : 'ativado'} com sucesso!`
+                                              );
+                                            } catch {
+                                              showError(
+                                                'Erro ao alterar status do serviço',
+                                                'Erro'
+                                              );
+                                            }
+                                          })();
+                                        },
+                                      },
+                                      {
+                                        id: 'divider',
+                                        label: '',
+                                        divider: true,
+                                      },
+                                      createDropdownItems.delete(() => {
+                                        setServiceToDelete(service);
+                                      }),
+                                    ]}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))
+                        )}
+                      </TableBody>
+                    </Table>
                   )}
                 </CardContent>
               </Card>
@@ -1156,6 +1568,205 @@ export default function AdminPage() {
               disabled={deleteCategoryMutation?.isPending}
             >
               {deleteCategoryMutation?.isPending ? (
+                <>
+                  <Spinner size='sm' />
+                  <span className='ml-2'>Excluindo...</span>
+                </>
+              ) : (
+                'Excluir'
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Add Service Modal */}
+      <Modal
+        isOpen={showAddServiceModal}
+        onClose={() => setShowAddServiceModal(false)}
+        title='Adicionar Novo Serviço'
+        size='lg'
+      >
+        <form onSubmit={e => void handleCreateService(e)}>
+          <Stack spacing={4}>
+            <Input
+              label='Título'
+              placeholder='Digite o título do serviço'
+              value={serviceFormData.title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setServiceFormData(prev => ({
+                  ...prev,
+                  title: e.target.value,
+                }))
+              }
+              required
+            />
+
+            <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <label className='block text-sm font-medium text-neutral-text-primary mb-2'>
+                  Categoria
+                </label>
+                <Autocomplete
+                  options={parentCategoryOptions.slice(1)} // Remove the "Nenhuma" option
+                  value={serviceFormData.categoryId}
+                  onChange={value =>
+                    setServiceFormData(prev => ({
+                      ...prev,
+                      categoryId: value || '',
+                    }))
+                  }
+                  placeholder='Selecionar categoria...'
+                  emptyMessage='Nenhuma categoria encontrada'
+                  searchable
+                />
+              </div>
+
+              <Input
+                label='ID do Provedor'
+                placeholder='Digite o ID do provedor'
+                value={serviceFormData.providerId}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setServiceFormData(prev => ({
+                    ...prev,
+                    providerId: e.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+
+            <div className='grid grid-cols-2 gap-4'>
+              <Input
+                label='Preço (opcional)'
+                type='number'
+                step='0.01'
+                min='0'
+                placeholder='0.00'
+                value={serviceFormData.price || ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setServiceFormData(prev => ({
+                    ...prev,
+                    price: e.target.value
+                      ? parseFloat(e.target.value)
+                      : undefined,
+                  }))
+                }
+              />
+
+              <div>
+                <label className='block text-sm font-medium text-neutral-text-primary mb-2'>
+                  Status
+                </label>
+                <select
+                  value={serviceFormData.status}
+                  onChange={e =>
+                    setServiceFormData(prev => ({
+                      ...prev,
+                      status: e.target.value as 'ACTIVE' | 'INACTIVE',
+                    }))
+                  }
+                  className='w-full px-3 py-2 border border-neutral-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                >
+                  <option value='ACTIVE'>Ativo</option>
+                  <option value='INACTIVE'>Inativo</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className='block text-sm font-medium text-neutral-text-primary mb-2'>
+                Descrição (opcional)
+              </label>
+              <textarea
+                placeholder='Digite uma descrição para o serviço...'
+                value={serviceFormData.description || ''}
+                onChange={e =>
+                  setServiceFormData(prev => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                rows={4}
+                className='w-full px-3 py-2 border border-neutral-border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical'
+              />
+            </div>
+
+            <Stack direction='row' spacing={3} className='pt-4'>
+              <Button
+                type='submit'
+                variant='primary'
+                disabled={createServiceMutation?.isPending}
+              >
+                {createServiceMutation?.isPending ? (
+                  <>
+                    <Spinner size='sm' />
+                    <span className='ml-2'>Criando...</span>
+                  </>
+                ) : (
+                  'Criar Serviço'
+                )}
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={() => setShowAddServiceModal(false)}
+                disabled={createServiceMutation?.isPending}
+              >
+                Cancelar
+              </Button>
+            </Stack>
+          </Stack>
+        </form>
+      </Modal>
+
+      {/* Service Delete Modal */}
+      <Modal
+        isOpen={!!serviceToDelete}
+        onClose={() => setServiceToDelete(null)}
+        title='Confirmar Exclusão'
+        size='sm'
+      >
+        <div className='space-y-4'>
+          <Body>
+            Tem certeza que deseja excluir o serviço{' '}
+            <strong>{serviceToDelete?.title || ''}</strong>?
+          </Body>
+          <Body className='text-neutral-text-secondary'>
+            Esta ação não pode ser desfeita. Todos os dados relacionados a este
+            serviço serão perdidos.
+          </Body>
+          <div className='flex gap-2 justify-end'>
+            <Button
+              variant='outline'
+              onClick={() => setServiceToDelete(null)}
+              disabled={deleteServiceMutation?.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant='outline'
+              className='bg-red-600 text-white hover:bg-red-700 border-red-600'
+              onClick={() => {
+                if (serviceToDelete) {
+                  void (async () => {
+                    try {
+                      await deleteServiceMutation.mutateAsync(
+                        serviceToDelete.id
+                      );
+                      showSuccess(
+                        `Serviço "${serviceToDelete.title}" excluído com sucesso!`
+                      );
+                      setServiceToDelete(null);
+                    } catch {
+                      showError('Erro ao excluir serviço', 'Erro');
+                    }
+                  })();
+                }
+              }}
+              disabled={deleteServiceMutation?.isPending}
+            >
+              {deleteServiceMutation?.isPending ? (
                 <>
                   <Spinner size='sm' />
                   <span className='ml-2'>Excluindo...</span>
