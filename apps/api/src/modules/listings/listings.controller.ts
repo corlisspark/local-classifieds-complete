@@ -19,7 +19,7 @@ import { JwtAuthGuard } from '../auth/auth.guard';
 import { RolesGuard, Roles } from '../auth/roles.guard';
 import { UserRole } from '@prisma/client';
 
-@Controller('listings')
+@Controller('services')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ListingsController {
   constructor(private readonly listingsService: ListingsService) {}

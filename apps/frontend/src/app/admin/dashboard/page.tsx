@@ -39,18 +39,17 @@ import {
   useRestoreCategory,
   type Category,
 } from '../../../services';
-import { 
-  Listing, 
-  CreateListingData,
-  ListingStats 
-} from '../../../services/listings';
 import {
-  useListingsPaginated,
-  useListingStats,
-  useCreateListing,
-  useUpdateListing,
-  useDeleteListing,
-} from '../../../hooks/useListings';
+  useServicesPaginated,
+  useServiceStats,
+  useCreateService,
+  useUpdateService,
+  useDeleteService,
+} from '../../../hooks/useServices';
+import {
+  Service,
+  CreateServiceData,
+} from '../../../services/services';
 import { Spinner } from '../../../components/ui/Spinner';
 import { useToastNotifications } from '../../../components/ui/Toast';
 import type { AutocompleteOption } from '../../../components/ui/Autocomplete';
@@ -116,16 +115,16 @@ export default function AdminPage() {
 
   // Listings data fetching
   const {
-    data: listingsPaginatedData,
-    isLoading: listingsLoading,
-    error: listingsError,
-    refetch: refetchListings,
+    data: servicesPaginatedData,
+    isLoading: servicesLoading,
+    error: servicesError,
+    refetch: refetchServices,
   } = useListingsPaginated(page, limit, {
     includeProvider: true,
     includeCategory: true,
   });
 
-  const { data: listingsStats } = useListingStats();
+  const { data: servicesStats } = useListingStats();
 
   // Hook para buscar todas as categorias (sem paginação) para o Autocomplete
   const { data: allCategories = [] } = useCategories({
@@ -1005,7 +1004,7 @@ export default function AdminPage() {
                     <div className='flex-1'>
                       <Input
                         placeholder='Buscar por título...'
-                        value={serviceSearchTerm}
+                        value={listingSearchTerm}
                         onChange={e => setServiceSearchTerm(e.target.value)}
                       />
                     </div>
@@ -1068,11 +1067,11 @@ export default function AdminPage() {
                           />
                         ) : (
                           (servicesPaginatedData?.data || [])
-                            .filter((service: Service) => {
-                              if (serviceSearchTerm) {
+                            .filter((listing: Listing) => {
+                              if (listingSearchTerm) {
                                 return service.title
                                   .toLowerCase()
-                                  .includes(serviceSearchTerm.toLowerCase());
+                                  .includes(listingSearchTerm.toLowerCase());
                               }
                               if (
                                 !showInactiveServices &&
@@ -1082,7 +1081,7 @@ export default function AdminPage() {
                               }
                               return true;
                             })
-                            .map((service: Service) => (
+                            .map((listing: Listing) => (
                               <TableRow key={service.id}>
                                 <TableCell>
                                   <div>
