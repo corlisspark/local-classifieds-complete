@@ -73,7 +73,10 @@ export default function Home() {
     setMessage('');
 
     try {
-      const response = await apiClient.post<LoginResponse>('/auth/login', loginData);
+      const response = await apiClient.post<LoginResponse>(
+        '/auth/login',
+        loginData
+      );
       // Store tokens in localStorage
       localStorage.setItem('access_token', response.access_token);
       localStorage.setItem('refresh_token', response.refresh_token);
@@ -205,11 +208,7 @@ export default function Home() {
                 </Button>
               </Link>
               {user ? (
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={handleLogout}
-                >
+                <Button variant='outline' size='sm' onClick={handleLogout}>
                   Sair
                 </Button>
               ) : (
