@@ -18,16 +18,35 @@ import {
   Badge,
 } from '../components/ui';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  user: User;
+}
+
 export default function Home() {
   // const { t } = useTranslations('common'); // TODO: Implement translations
   const [showSignup, setShowSignup] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [signupData, setSignupData] = useState({
     name: '',
     email: '',
     password: '',
   });
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: '',
+  });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [user, setUser] = useState<User | null>(null);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +65,38 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await apiClient.post<LoginResponse>('/auth/login', loginData);
+      // Store tokens in localStorage
+      localStorage.setItem('access_token', response.access_token);
+      localStorage.setItem('refresh_token', response.refresh_token);
+      // Set user in state
+      setUser(response.user);
+      setMessage('Login realizado com sucesso!');
+      setLoginData({ email: '', password: '' });
+      setTimeout(() => setShowLogin(false), 2000);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Erro no login';
+      setMessage(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setUser(null);
+    setMessage('Logout realizado com sucesso!');
+    setTimeout(() => setMessage(''), 2000);
   };
 
   // Mock data for categories
@@ -143,14 +194,33 @@ export default function Home() {
 
             <div className='flex items-center gap-3'>
               <LanguageSwitcher />
+              {user && (
+                <span className='text-sm text-neutral-text-secondary'>
+                  Olá, {user.name}
+                </span>
+              )}
               <Link href='/admin'>
                 <Button variant='outline' size='sm'>
                   Admin
                 </Button>
               </Link>
-              <Button variant='outline' size='sm'>
-                Entrar
-              </Button>
+              {user ? (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={handleLogout}
+                >
+                  Sair
+                </Button>
+              ) : (
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={() => setShowLogin(true)}
+                >
+                  Entrar
+                </Button>
+              )}
               <Button
                 variant='primary'
                 size='sm'
@@ -498,6 +568,68 @@ export default function Home() {
                 <button
                   type='button'
                   onClick={() => setShowSignup(false)}
+                  className='px-6 py-3 border rounded-lg hover:bg-gray-50'
+                >
+                  Fechar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showLogin && (
+        <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
+          <div className='bg-white p-8 rounded-lg max-w-md w-full mx-4'>
+            <h2 className='text-2xl font-bold mb-4'>Entrar</h2>
+            <form
+              onSubmit={e => {
+                void handleLogin(e);
+              }}
+              className='space-y-4'
+            >
+              <input
+                type='email'
+                placeholder='Email'
+                value={loginData.email}
+                onChange={e =>
+                  setLoginData({ ...loginData, email: e.target.value })
+                }
+                className='w-full p-3 border rounded-lg'
+                required
+              />
+              <input
+                type='password'
+                placeholder='Senha'
+                value={loginData.password}
+                onChange={e =>
+                  setLoginData({ ...loginData, password: e.target.value })
+                }
+                className='w-full p-3 border rounded-lg'
+                required
+              />
+              {message && (
+                <p
+                  className={
+                    message.includes('sucesso')
+                      ? 'text-green-600'
+                      : 'text-red-600'
+                  }
+                >
+                  {message}
+                </p>
+              )}
+              <div className='flex gap-3'>
+                <button
+                  type='submit'
+                  disabled={loading}
+                  className='flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50'
+                >
+                  {loading ? 'Entrando...' : 'Entrar'}
+                </button>
+                <button
+                  type='button'
+                  onClick={() => setShowLogin(false)}
                   className='px-6 py-3 border rounded-lg hover:bg-gray-50'
                 >
                   Fechar
