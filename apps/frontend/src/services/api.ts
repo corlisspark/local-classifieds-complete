@@ -2,9 +2,7 @@
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.RAILWAY_SERVICE_API_URL
-    ? `https://${process.env.RAILWAY_SERVICE_API_URL}/api`
-    : 'http://localhost:3000/api');
+  'https://api-production-58c2.up.railway.app/api';
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
