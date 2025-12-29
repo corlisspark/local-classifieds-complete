@@ -73,10 +73,10 @@ export default function AdminPage() {
   );
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
   // States for listings
-  const [showAddListingModal, setShowAddListingModal] = useState(false);
-  const [listingToDelete, setListingToDelete] = useState<Listing | null>(null);
-  const [listingSearchTerm, setListingSearchTerm] = useState('');
-  const [showInactiveListings, setShowInactiveListings] = useState(false);
+  const [showAddServiceModal, setShowAddListingModal] = useState(false);
+  const [serviceToDelete, setListingToDelete] = useState<Listing | null>(null);
+  const [serviceSearchTerm, setListingSearchTerm] = useState('');
+  const [showInactiveServices, setShowInactiveListings] = useState(false);
 
   // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -145,9 +145,9 @@ export default function AdminPage() {
   const restoreCategoryMutation = useRestoreCategory();
 
   // Listings mutations
-  const createListingMutation = useCreateListing();
-  const updateListingMutation = useUpdateListing();
-  const deleteListingMutation = useDeleteListing();
+  const createServiceMutation = useCreateListing();
+  const updateServiceMutation = useUpdateListing();
+  const deleteServiceMutation = useDeleteListing();
 
   // Hook para notificações
   const { showSuccess, showError } = useToastNotifications();
@@ -231,7 +231,7 @@ export default function AdminPage() {
   });
 
   // Listing form data
-  const [listingFormData, setListingFormData] = useState<CreateListingData>({
+  const [serviceFormData, setListingFormData] = useState<CreateListingData>({
     providerId: '',
     categoryId: '',
     title: '',
@@ -474,26 +474,26 @@ export default function AdminPage() {
     setShowEditModal(true);
   };
 
-  const handleCreateListing = async (e: React.FormEvent) => {
+  const handleCreateService = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!listingFormData.title.trim()) {
+    if (!serviceFormData.title.trim()) {
       showError('Título é obrigatório', 'Validação');
       return;
     }
 
-    if (!listingFormData.categoryId) {
+    if (!serviceFormData.categoryId) {
       showError('Categoria é obrigatória', 'Validação');
       return;
     }
 
-    if (!listingFormData.providerId) {
+    if (!serviceFormData.providerId) {
       showError('Provedor é obrigatório', 'Validação');
       return;
     }
 
     try {
-      await createListingMutation.mutateAsync(listingFormData);
+      await createServiceMutation.mutateAsync(serviceFormData);
       showSuccess('Serviço criado com sucesso!', 'Sucesso');
       setListingFormData({
         providerId: '',
@@ -1004,7 +1004,7 @@ export default function AdminPage() {
                     <div className='flex-1'>
                       <Input
                         placeholder='Buscar por título...'
-                        value={listingSearchTerm}
+                        value={serviceSearchTerm}
                         onChange={e => setServiceSearchTerm(e.target.value)}
                       />
                     </div>
@@ -1067,11 +1067,11 @@ export default function AdminPage() {
                           />
                         ) : (
                           (servicesPaginatedData?.data || [])
-                            .filter((listing: Listing) => {
-                              if (listingSearchTerm) {
+                            .filter((service: Service) => {
+                              if (serviceSearchTerm) {
                                 return service.title
                                   .toLowerCase()
-                                  .includes(listingSearchTerm.toLowerCase());
+                                  .includes(serviceSearchTerm.toLowerCase());
                               }
                               if (
                                 !showInactiveServices &&
@@ -1081,7 +1081,7 @@ export default function AdminPage() {
                               }
                               return true;
                             })
-                            .map((listing: Listing) => (
+                            .map((service: Service) => (
                               <TableRow key={service.id}>
                                 <TableCell>
                                   <div>
