@@ -73,10 +73,10 @@ export default function AdminPage() {
   );
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
   // States for listings
-  const [showAddServiceModal, setShowAddListingModal] = useState(false);
-  const [serviceToDelete, setListingToDelete] = useState<Listing | null>(null);
-  const [serviceSearchTerm, setListingSearchTerm] = useState('');
-  const [showInactiveServices, setShowInactiveListings] = useState(false);
+  const [showAddServiceModal, setShowAddServiceModal] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null);
+  const [serviceSearchTerm, setServiceSearchTerm] = useState('');
+  const [showInactiveServices, setShowInactiveServices] = useState(false);
 
   // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -113,18 +113,18 @@ export default function AdminPage() {
 
   const { data: stats } = useCategoryStats();
 
-  // Listings data fetching
+  // Services data fetching
   const {
     data: servicesPaginatedData,
     isLoading: servicesLoading,
     error: servicesError,
     refetch: refetchServices,
-  } = useListingsPaginated(page, limit, {
+  } = useServicesPaginated(page, limit, {
     includeProvider: true,
     includeCategory: true,
   });
 
-  const { data: servicesStats } = useListingStats();
+  const { data: servicesStats } = useServiceStats();
 
   // Hook para buscar todas as categorias (sem paginação) para o Autocomplete
   const { data: allCategories = [] } = useCategories({
@@ -144,10 +144,10 @@ export default function AdminPage() {
   // Hook para restaurar categoria
   const restoreCategoryMutation = useRestoreCategory();
 
-  // Listings mutations
-  const createServiceMutation = useCreateListing();
-  const updateServiceMutation = useUpdateListing();
-  const deleteServiceMutation = useDeleteListing();
+  // Services mutations
+  const createServiceMutation = useCreateService();
+  const updateServiceMutation = useUpdateService();
+  const deleteServiceMutation = useDeleteService();
 
   // Hook para notificações
   const { showSuccess, showError } = useToastNotifications();
@@ -230,8 +230,8 @@ export default function AdminPage() {
     ],
   });
 
-  // Listing form data
-  const [serviceFormData, setListingFormData] = useState<CreateListingData>({
+  // Service form data
+  const [serviceFormData, setServiceFormData] = useState<CreateServiceData>({
     providerId: '',
     categoryId: '',
     title: '',
@@ -495,7 +495,7 @@ export default function AdminPage() {
     try {
       await createServiceMutation.mutateAsync(serviceFormData);
       showSuccess('Serviço criado com sucesso!', 'Sucesso');
-      setListingFormData({
+      setServiceFormData({
         providerId: '',
         categoryId: '',
         title: '',
@@ -503,7 +503,7 @@ export default function AdminPage() {
         price: undefined,
         status: 'ACTIVE',
       });
-      setShowAddListingModal(false);
+      setShowAddServiceModal(false);
     } catch (error) {
       showError(
         error instanceof Error ? error.message : 'Erro ao criar serviço',
@@ -581,7 +581,7 @@ export default function AdminPage() {
             )}
             {activeSection === AdminSection.LISTINGS && (
               <Button
-                onClick={() => setShowAddListingModal(true)}
+                onClick={() => setShowAddServiceModal(true)}
                 variant='primary'
               >
                 Adicionar Serviço
