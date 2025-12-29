@@ -1,4 +1,5 @@
 import { apiClient, PaginatedResponse } from './api';
+import { ServiceStatus } from '@prisma/client';
 
 export interface Service {
   id: string;
@@ -7,12 +8,17 @@ export interface Service {
   title: string;
   description?: string;
   price?: number;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: ServiceStatus;
   createdAt: string;
   updatedAt: string;
   provider?: {
     id: string;
     userId: string;
+    bio?: string;
+    phone?: string;
+    whatsapp?: string;
+    address?: string;
+    rating?: number;
     user: {
       id: string;
       name: string;
@@ -22,6 +28,8 @@ export interface Service {
   category?: {
     id: string;
     slug: string;
+    active: boolean;
+    displayOrder: number;
     translations?: Array<{
       language: string;
       name: string;
@@ -31,26 +39,30 @@ export interface Service {
 }
 
 export interface CreateServiceData {
-  providerId: string;
-  categoryId: string;
   title: string;
   description?: string;
   price?: number;
-  status?: 'ACTIVE' | 'INACTIVE';
+  providerId: string;
+  categoryId: string;
+  status?: ServiceStatus;
 }
 
 export interface UpdateServiceData {
   title?: string;
   description?: string;
   price?: number;
-  status?: 'ACTIVE' | 'INACTIVE';
+  providerId?: string;
   categoryId?: string;
+  status?: ServiceStatus;
 }
 
 export interface ServiceQueryParams {
   providerId?: string;
   categoryId?: string;
-  status?: 'ACTIVE' | 'INACTIVE';
+  status?: ServiceStatus;
+  search?: string;
+  limit?: number;
+  offset?: number;
   includeProvider?: boolean;
   includeCategory?: boolean;
 }
@@ -59,8 +71,6 @@ export interface ServiceStats {
   total: number;
   active: number;
   inactive: number;
-  byCategory: Record<string, number>;
-  byProvider: Record<string, number>;
   averagePrice: number;
 }
 
@@ -97,7 +107,7 @@ export class ServicesService {
   async getPaginated(
     page: number = 1,
     limit: number = 10,
-    params?: ServiceQueryParams
+    params?: Omit<ServiceQueryParams, 'limit' | 'offset'>
   ): Promise<PaginatedResponse<Service>> {
     const offset = (page - 1) * limit;
     return apiClient.get<PaginatedResponse<Service>>(this.basePath, {

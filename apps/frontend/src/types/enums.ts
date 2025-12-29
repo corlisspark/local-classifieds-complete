@@ -40,8 +40,8 @@ export enum CategorySortField {
  */
 export enum AdminSection {
   CATEGORIES = 'categories',
+  SERVICES = 'services',
   USERS = 'users',
-  LISTINGS = 'listings',
   SETTINGS = 'settings',
 }
 

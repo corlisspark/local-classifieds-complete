@@ -39,15 +39,6 @@ export type {
   UserStats,
 } from './users';
 
-export { listingsService, ListingsService } from './listings';
-export type {
-  Listing,
-  CreateListingData,
-  UpdateListingData,
-  ListingQueryParams,
-  ListingStats,
-} from './listings';
-
 export { servicesService, ServicesService } from './services';
 export type {
   Service,
