@@ -1,6 +1,6 @@
 import { ServiceStatus } from '@prisma/client';
 
-export class CreateServiceDto {
+export interface CreateServiceDto {
   title: string;
   description?: string;
   price?: number;

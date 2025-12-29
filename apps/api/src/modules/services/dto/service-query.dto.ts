@@ -1,6 +1,6 @@
 import { ServiceStatus } from '@prisma/client';
 
-export class ServiceQueryDto {
+export interface ServiceQueryDto {
   limit?: number;
   offset?: number;
   providerId?: string;
