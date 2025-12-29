@@ -46,7 +46,6 @@ class ApiClient {
 
     // Get JWT token from localStorage
     const token = localStorage.getItem('access_token');
-    
     const config: RequestInit = {
       headers: {
         'Content-Type': 'application/json',
