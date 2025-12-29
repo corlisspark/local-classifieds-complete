@@ -1,8 +1,10 @@
 // Base API configuration and utilities
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 
-  (process.env.RAILWAY_SERVICE_API_URL ? `https://${process.env.RAILWAY_SERVICE_API_URL}/api` : 'http://localhost:3000/api');
+  process.env.NEXT_PUBLIC_API_URL ||
+  (process.env.RAILWAY_SERVICE_API_URL
+    ? `https://${process.env.RAILWAY_SERVICE_API_URL}/api`
+    : 'http://localhost:3000/api');
 
 export interface ApiResponse<T = unknown> {
   success: boolean;
