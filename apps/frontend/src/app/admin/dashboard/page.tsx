@@ -38,13 +38,6 @@ import {
   useDeleteCategory,
   useRestoreCategory,
   type Category,
-  useServicesPaginated,
-  useServiceStats,
-  useCreateService,
-  useUpdateService,
-  useDeleteService,
-  type Service,
-  type CreateServiceData,
 } from '../../../services';
 import {
   useServicesPaginated,
@@ -54,8 +47,8 @@ import {
   useDeleteService,
 } from '../../../hooks/useServices';
 import {
-  Service,
-  CreateServiceData,
+  type Service,
+  type CreateServiceData,
 } from '../../../services/services';
 import { Spinner } from '../../../components/ui/Spinner';
 import { useToastNotifications } from '../../../components/ui/Toast';
