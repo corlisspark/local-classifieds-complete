@@ -39,14 +39,18 @@ import {
   useRestoreCategory,
   type Category,
 } from '../../../services';
+import { 
+  Listing, 
+  CreateListingData,
+  ListingStats 
+} from '../../../services/listings';
 import {
-  useServicesPaginated,
-  useServiceStats,
-  useCreateService,
-  useUpdateService,
-  useDeleteService,
-} from '../../../hooks/useServices';
-import { Service, CreateServiceData } from '../../../services/services';
+  useListingsPaginated,
+  useListingStats,
+  useCreateListing,
+  useUpdateListing,
+  useDeleteListing,
+} from '../../../hooks/useListings';
 import { Spinner } from '../../../components/ui/Spinner';
 import { useToastNotifications } from '../../../components/ui/Toast';
 import type { AutocompleteOption } from '../../../components/ui/Autocomplete';
@@ -69,11 +73,11 @@ export default function AdminPage() {
     null
   );
   const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
-  // States for services
-  const [showAddServiceModal, setShowAddServiceModal] = useState(false);
-  const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null);
-  const [serviceSearchTerm, setServiceSearchTerm] = useState('');
-  const [showInactiveServices, setShowInactiveServices] = useState(false);
+  // States for listings
+  const [showAddListingModal, setShowAddListingModal] = useState(false);
+  const [listingToDelete, setListingToDelete] = useState<Listing | null>(null);
+  const [listingSearchTerm, setListingSearchTerm] = useState('');
+  const [showInactiveListings, setShowInactiveListings] = useState(false);
 
   // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -110,18 +114,18 @@ export default function AdminPage() {
 
   const { data: stats } = useCategoryStats();
 
-  // Services data fetching
+  // Listings data fetching
   const {
-    data: servicesPaginatedData,
-    isLoading: servicesLoading,
-    error: servicesError,
-    refetch: refetchServices,
-  } = useServicesPaginated(page, limit, {
+    data: listingsPaginatedData,
+    isLoading: listingsLoading,
+    error: listingsError,
+    refetch: refetchListings,
+  } = useListingsPaginated(page, limit, {
     includeProvider: true,
     includeCategory: true,
   });
 
-  const { data: servicesStats } = useServiceStats();
+  const { data: listingsStats } = useListingStats();
 
   // Hook para buscar todas as categorias (sem paginação) para o Autocomplete
   const { data: allCategories = [] } = useCategories({
@@ -141,10 +145,10 @@ export default function AdminPage() {
   // Hook para restaurar categoria
   const restoreCategoryMutation = useRestoreCategory();
 
-  // Services mutations
-  const createServiceMutation = useCreateService();
-  const updateServiceMutation = useUpdateService();
-  const deleteServiceMutation = useDeleteService();
+  // Listings mutations
+  const createListingMutation = useCreateListing();
+  const updateListingMutation = useUpdateListing();
+  const deleteListingMutation = useDeleteListing();
 
   // Hook para notificações
   const { showSuccess, showError } = useToastNotifications();
@@ -227,8 +231,8 @@ export default function AdminPage() {
     ],
   });
 
-  // Service form data
-  const [serviceFormData, setServiceFormData] = useState<CreateServiceData>({
+  // Listing form data
+  const [listingFormData, setListingFormData] = useState<CreateListingData>({
     providerId: '',
     categoryId: '',
     title: '',
@@ -471,28 +475,28 @@ export default function AdminPage() {
     setShowEditModal(true);
   };
 
-  const handleCreateService = async (e: React.FormEvent) => {
+  const handleCreateListing = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!serviceFormData.title.trim()) {
+    if (!listingFormData.title.trim()) {
       showError('Título é obrigatório', 'Validação');
       return;
     }
 
-    if (!serviceFormData.categoryId) {
+    if (!listingFormData.categoryId) {
       showError('Categoria é obrigatória', 'Validação');
       return;
     }
 
-    if (!serviceFormData.providerId) {
+    if (!listingFormData.providerId) {
       showError('Provedor é obrigatório', 'Validação');
       return;
     }
 
     try {
-      await createServiceMutation.mutateAsync(serviceFormData);
+      await createListingMutation.mutateAsync(listingFormData);
       showSuccess('Serviço criado com sucesso!', 'Sucesso');
-      setServiceFormData({
+      setListingFormData({
         providerId: '',
         categoryId: '',
         title: '',
@@ -500,7 +504,7 @@ export default function AdminPage() {
         price: undefined,
         status: 'ACTIVE',
       });
-      setShowAddServiceModal(false);
+      setShowAddListingModal(false);
     } catch (error) {
       showError(
         error instanceof Error ? error.message : 'Erro ao criar serviço',
@@ -578,7 +582,7 @@ export default function AdminPage() {
             )}
             {activeSection === AdminSection.LISTINGS && (
               <Button
-                onClick={() => setShowAddServiceModal(true)}
+                onClick={() => setShowAddListingModal(true)}
                 variant='primary'
               >
                 Adicionar Serviço

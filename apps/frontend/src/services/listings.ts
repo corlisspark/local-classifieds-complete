@@ -2,123 +2,68 @@ import { apiClient, PaginatedResponse } from './api';
 
 export interface Listing {
   id: string;
-  title: string;
-  description: string;
-  price?: number;
-  currency?: string;
+  providerId: string;
   categoryId: string;
-  userId: string;
-  status: 'draft' | 'active' | 'sold' | 'expired' | 'archived';
-  featured: boolean;
-  images: string[];
-  location?: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    coordinates?: {
-      lat: number;
-      lng: number;
-    };
-  };
-  contactInfo: {
-    phone?: string;
-    email?: string;
-    whatsapp?: string;
-  };
+  title: string;
+  description?: string;
+  price?: number;
+  status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   updatedAt: string;
-  expiresAt?: string;
+  provider?: {
+    id: string;
+    userId: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+    };
+  };
   category?: {
     id: string;
-    name: string;
     slug: string;
-  };
-  user?: {
-    id: string;
-    name: string;
-    avatar?: string;
+    translations?: Array<{
+      language: string;
+      name: string;
+      description?: string;
+    }>;
   };
 }
 
 export interface CreateListingData {
-  title: string;
-  description: string;
-  price?: number;
-  currency?: string;
+  providerId: string;
   categoryId: string;
-  status?: 'draft' | 'active';
-  featured?: boolean;
-  images?: string[];
-  location?: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    coordinates?: {
-      lat: number;
-      lng: number;
-    };
-  };
-  contactInfo: {
-    phone?: string;
-    email?: string;
-    whatsapp?: string;
-  };
-  expiresAt?: string;
+  title: string;
+  description?: string;
+  price?: number;
+  status?: 'ACTIVE' | 'INACTIVE';
 }
 
 export interface UpdateListingData {
   title?: string;
   description?: string;
   price?: number;
-  currency?: string;
+  status?: 'ACTIVE' | 'INACTIVE';
   categoryId?: string;
-  status?: 'draft' | 'active' | 'sold' | 'expired' | 'archived';
-  featured?: boolean;
-  images?: string[];
-  location?: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    coordinates?: {
-      lat: number;
-      lng: number;
-    };
-  };
-  contactInfo?: {
-    phone?: string;
-    email?: string;
-    whatsapp?: string;
-  };
-  expiresAt?: string;
 }
 
 export interface ListingQueryParams {
   categoryId?: string;
-  userId?: string;
-  status?: string;
-  featured?: boolean;
-  city?: string;
-  state?: string;
-  country?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  search?: string;
+  providerId?: string;
+  status?: 'ACTIVE' | 'INACTIVE';
+  includeProvider?: boolean;
+  includeCategory?: boolean;
   limit?: number;
   offset?: number;
-  sortBy?: 'createdAt' | 'updatedAt' | 'price' | 'title';
-  sortOrder?: 'asc' | 'desc';
 }
 
 export interface ListingStats {
   total: number;
-  byStatus: Record<string, number>;
+  active: number;
+  inactive: number;
   byCategory: Record<string, number>;
-  byLocation: Record<string, number>;
+  byProvider: Record<string, number>;
   averagePrice: number;
-  featured: number;
 }
 
 export class ListingsService {

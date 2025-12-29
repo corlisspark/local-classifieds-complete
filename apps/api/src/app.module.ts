@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from '../libs/database/src/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ListingsModule } from './modules/listings/listings.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 
@@ -12,6 +13,7 @@ import { UsersModule } from './modules/users/users.module';
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     CategoriesModule,
+    ListingsModule,
     AuthModule,
     UsersModule,
   ],
